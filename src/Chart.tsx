@@ -38,8 +38,8 @@ export type ChartHandle = {
 }
 
 const Chart: React.FC<ChartProps> = React.memo(
-  React.forwardRef<ChartHandle, ChartProps>((props, ref) => {
-    const { style, children, data = [], padding, xDomain, yDomain, viewport, disableGestures, disableTouch } = deepmerge(computeDefaultProps(props), props)
+  React.forwardRef<ChartHandle, ChartProps>(({ children, ...props }, ref) => {
+    const { style, data = [], padding, xDomain, yDomain, viewport, disableGestures, disableTouch } = deepmerge(computeDefaultProps(props), props)
     const { dimensions, onLayout } = useComponentDimensions()
     const dataDimensions = calculateDataDimensions(dimensions, padding)
 
