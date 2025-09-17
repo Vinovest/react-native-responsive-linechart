@@ -14,7 +14,7 @@ import { ChartContextProvider } from './ChartContext'
 import { calculateDataDimensions, calculateViewportDomain } from './Chart.utils'
 import { scalePointToDimensions } from './utils'
 
-type Props = {
+export interface ChartProps extends React.PropsWithChildren {
   /** All styling can be used except for padding. If you need padding, use the explicit `padding` prop below.*/
   style?: ViewStyle
   /** Data to be used by `<Area />` or `<Line />` children. Not required, and can be overridden in Area or Line components. */
@@ -37,8 +37,8 @@ export type ChartHandle = {
   setViewportOrigin: (origin: XYValue) => void
 }
 
-const Chart: React.FC<Props> = React.memo(
-  React.forwardRef<ChartHandle, Props>((props, ref) => {
+const Chart: React.FC<ChartProps> = React.memo(
+  React.forwardRef<ChartHandle, ChartProps>((props, ref) => {
     const { style, children, data = [], padding, xDomain, yDomain, viewport, disableGestures, disableTouch } = deepmerge(computeDefaultProps(props), props)
     const { dimensions, onLayout } = useComponentDimensions()
     const dataDimensions = calculateDataDimensions(dimensions, padding)
@@ -207,7 +207,7 @@ const Chart: React.FC<Props> = React.memo(
 
 export { Chart }
 
-const computeDefaultProps = (props: Props) => {
+const computeDefaultProps = (props: ChartProps) => {
   const { data = [] } = props
 
   const xDomain = props.xDomain ?? {
@@ -220,18 +220,21 @@ const computeDefaultProps = (props: Props) => {
     max: data.length > 0 ? maxBy(data, (d) => d.y)!.y : 10,
   }
 
-  return {
+  const ret = {
     padding: {
       left: 0,
       top: 0,
       bottom: 0,
       right: 0,
     },
-    xDomain,
-    yDomain,
+    // prevent a recursion error by not providing props values as defaults
+    // xDomain: props.xDomain ? undefined : xDomain,
+    // yDomain: props.yDomain ? undefined : yDomain,
     viewport: {
       size: { width: Math.abs(xDomain.max - xDomain.min), height: Math.abs(yDomain.max - yDomain.min) },
       initialOrigin: { x: xDomain.min, y: yDomain.min },
     },
-  }
+  };
+  console.log('returning default props', ret)
+  return ret
 }
