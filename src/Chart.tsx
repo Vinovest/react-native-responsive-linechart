@@ -220,21 +220,18 @@ const computeDefaultProps = (props: ChartProps) => {
     max: data.length > 0 ? maxBy(data, (d) => d.y)!.y : 10,
   }
 
-  const ret = {
+  return {
     padding: {
       left: 0,
       top: 0,
       bottom: 0,
       right: 0,
     },
-    // prevent a recursion error by not providing props values as defaults
-    // xDomain: props.xDomain ? undefined : xDomain,
-    // yDomain: props.yDomain ? undefined : yDomain,
+    xDomain,
+    yDomain,
     viewport: {
       size: { width: Math.abs(xDomain.max - xDomain.min), height: Math.abs(yDomain.max - yDomain.min) },
       initialOrigin: { x: xDomain.min, y: yDomain.min },
     },
-  };
-  console.log('returning default props', ret)
-  return ret
+  }
 }
