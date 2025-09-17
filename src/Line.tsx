@@ -40,13 +40,12 @@ export type LineHandle = {
   setTooltipIndex: (index: number | undefined) => void
 }
 
-const Line = React.forwardRef<LineHandle, Props>(function Line(props, ref) {
+const Line = React.forwardRef<LineHandle, Props>(function Line({tooltipComponent, ...props}, ref) {
   const { data: contextData, dimensions, viewportDomain, viewportOrigin, lastTouch } = React.useContext(ChartContext)
   const [tooltipIndex, setTooltipIndex] = React.useState<number | undefined>(props.initialTooltipIndex)
 
   const {
     theme: { stroke, scatter },
-    tooltipComponent,
     data = contextData,
     tension,
     smoothing,
